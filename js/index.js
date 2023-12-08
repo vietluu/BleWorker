@@ -16,7 +16,7 @@ shutdownBtn.addEventListener('click', shutdown);
 powerBtn.addEventListener('click', powerQuery);
 
 if('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./worker-service.js')
+  navigator.serviceWorker.register('worker-service.js')
   .then(function(registration) {
     console.log('Registration successful, scope is:', registration.scope);
   })
