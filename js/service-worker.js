@@ -1,6 +1,6 @@
-// service-worker.js
 import { start } from "./index.js";
-// Lưu ý: Đây là pseudocode, bạn cần điều chỉnh để phù hợp với logic cụ thể của mình
+
+// service-worker.js
 
 // Khi Service Worker được khởi tạo
 self.addEventListener('install', function(event) {
