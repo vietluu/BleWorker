@@ -41,8 +41,8 @@ export async function start() {
     ]);
     await characteristic.writeValue(data);
     setTimeout(() => {
-      interval = setInterval(start(), 900000);
-    },900000)
+      interval = setInterval(start(), 1800000);
+    },1800000)
   } catch (error) {
     console.log(error);
     clearInterval(interval);
