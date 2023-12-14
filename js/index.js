@@ -14,7 +14,7 @@ startBtn.addEventListener("click", start);
 endBtn.addEventListener("click", end);
 shutdownBtn.addEventListener("click", shutdown);
 powerBtn.addEventListener("click", powerQuery);
-
+let timeout
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("./js/service-worker.js")
@@ -39,7 +39,8 @@ export async function start() {
       0xcc, 0x80, 0x02, 0x03, 0x01, 0x02, 0x00, 0x02,
     ]);
     await characteristic.writeValue(data);
-    setTimeout(start(),1800000)
+    clearTimeout(timeout);
+   timeout =  setTimeout(start(),1800000)
   } catch (error) {
     console.log(error);
     
