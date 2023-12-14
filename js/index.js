@@ -25,7 +25,6 @@ if ("serviceWorker" in navigator) {
       console.log("Service worker registration failed, error:", error);
     });
 }
-let interval;
 async function connection() {
   const data = new Uint8Array([0xcc, 0x80, 0x02, 0x03, 0x01, 0x01, 0x00, 0x01]);
   await characteristic.writeValue(data);
@@ -40,12 +39,10 @@ export async function start() {
       0xcc, 0x80, 0x02, 0x03, 0x01, 0x02, 0x00, 0x02,
     ]);
     await characteristic.writeValue(data);
-    setTimeout(() => {
-      interval = setInterval(start(), 1800000);
-    },1800000)
+    setTimeout(start(),1800000)
   } catch (error) {
     console.log(error);
-    clearInterval(interval);
+    
   }
 }
 async function end() {
