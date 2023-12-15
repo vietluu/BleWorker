@@ -8,13 +8,13 @@ const startBtn = document.getElementById("btn-start");
 const endBtn = document.getElementById("btn-disable");
 const shutdownBtn = document.getElementById("btn-shutdown");
 const powerBtn = document.getElementById("btn-power");
-
+const status  = document.getElementById("status");
+const value = document.getElementById("value");
 connectbtn.addEventListener("click", connect);
 startBtn.addEventListener("click", start);
 endBtn.addEventListener("click", end);
 shutdownBtn.addEventListener("click", shutdown);
 powerBtn.addEventListener("click", powerQuery);
-let timeout
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("./js/service-worker.js")
@@ -28,28 +28,74 @@ if ("serviceWorker" in navigator) {
 async function connection() {
   const data = new Uint8Array([0xcc, 0x80, 0x02, 0x03, 0x01, 0x01, 0x00, 0x01]);
   await characteristic.writeValue(data);
+  status.innerHTML = "Đã kết nối";
 }
 async function powerQuery() {
   const data = new Uint8Array([0xcc, 0x80, 0x02, 0x03, 0x04, 0x04, 0x00, 0x01]);
   await characteristic.writeValue(data);
 }
+
+// Hàm xử lý sự kiện khi nhận được dữ liệu từ characteristic
+ async function handleCharacteristicValueChanged(event) {
+  const receivedData = event.target.value;
+  const currentDate = new Date();
+
+  // Lấy thông tin ngày, tháng, năm
+  const day = currentDate.getDate();
+  const month = currentDate.getMonth() + 1; // Tháng bắt đầu từ 0
+  const year = currentDate.getFullYear();
+
+  // Lấy thông tin giờ, phút, giây
+  const hours = currentDate.getHours();
+  const minutes = currentDate.getMinutes();
+  const seconds = currentDate.getSeconds();
+
+  // Định dạng lại chuỗi theo dd/mm/yyyy, hh:mm:ss
+  const formattedDateTime = `${day}/${month}/${year}, ${hours}:${minutes}:${seconds}`;
+
+  // Chuyển dữ liệu hexa sang mảng byte
+  const byteArray = new Uint8Array(receivedData.buffer);
+  if(byteArray.length == 13){
+    value.innerHTML = `processing: ${byteArray[10]}`;
+  }
+  console.log(`${formattedDateTime}: Received data:`, byteArray);
+  if(byteArray.length == 20){
+    value.innerHTML = `result - Sys :${byteArray[14]} , Dia: ${byteArray[16]} , pulse: ${byteArray[18]}`;
+    status.innerHTML = "Đã đo xong";
+  }
+  if(byteArray.length == 8 && byteArray[6] != 0){
+    status.innerHTML = "";
+    value.innerHTML = `error code: ${byteArray[6]}`;
+  }
+}
+let intervalId; // Biến lưu trữ ID của interval
+
 export async function start() {
+  status.innerHTML = "Đang tiền hành đo...";
   try {
     const data = new Uint8Array([
       0xcc, 0x80, 0x02, 0x03, 0x01, 0x02, 0x00, 0x02,
     ]);
     await characteristic.writeValue(data);
-    clearTimeout(timeout);
-   timeout =  setTimeout(start(),1800000)
+
+    if (intervalId) {
+      clearInterval(intervalId);
+    }
+
+    intervalId = setInterval(async () => {
+      await start(); // Gọi lại start sau mỗi 30 phút
+    }, 30 * 60 * 1000); // 30 phút * 60 giây/phút * 1000 milliseconds/giây
+
   } catch (error) {
+    alert("Lỗi kết nối: " + error);
+    window.location.reload();
     console.log(error);
-    
   }
 }
 async function end() {
   const data = new Uint8Array([0xcc, 0x80, 0x02, 0x03, 0x01, 0x03, 0x00, 0x03]);
   await characteristic.writeValue(data);
-  clearInterval(interval);
+  //clearInterval(interval);
 }
 async function shutdown() {
   const data = new Uint8Array([0xcc, 0x80, 0x02, 0x03, 0x01, 0x04, 0x00, 0x04]);
@@ -63,6 +109,8 @@ async function connect() {
       filters: [{ services: [serviceUUID] }],
     });
     // Kết nối đến thiết bị đã chọn
+    status.innerHTML = "Đang kết nối...";
+
     const server = await device.gatt.connect();
 
     // Nhận service từ thiết bị
@@ -71,19 +119,15 @@ async function connect() {
     characteristic = await service.getCharacteristic(characteristicUUID);
     read = await service.getCharacteristic(readUUID);
     // Lắng nghe sự kiện nhận dữ liệu
-    read.addEventListener("characteristicvaluechanged", (event) => {
-      const receivedData = event.target.value;
-      console.log("Received data:", receivedData);
-      // Chuyển dữ liệu hexa sang mảng byte
-      const byteArray = new Uint8Array(receivedData.buffer);
-      console.log("Byte array:", byteArray);
-    });
+    read.addEventListener("characteristicvaluechanged", handleCharacteristicValueChanged);
 
-    // Kích hoạt lắng nghe
+    // Kích hoạt lắng nghe dữ liệu
     await read.startNotifications();
     // Gửi lệnh kết nối
     await connection();
   } catch (error) {
+    alert("Lỗi kết nối: " + error);
+    window.location.reload();
     console.error("Lỗi kết nối:", error);
   }
 }
