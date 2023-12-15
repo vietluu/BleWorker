@@ -95,6 +95,7 @@ export async function start() {
 async function end() {
   const data = new Uint8Array([0xcc, 0x80, 0x02, 0x03, 0x01, 0x03, 0x00, 0x03]);
   await characteristic.writeValue(data);
+  status.innerHTML = "Đã dừng đo";
   //clearInterval(interval);
 }
 async function shutdown() {
