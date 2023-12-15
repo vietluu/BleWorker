@@ -10,6 +10,7 @@ const shutdownBtn = document.getElementById("btn-shutdown");
 const powerBtn = document.getElementById("btn-power");
 const status  = document.getElementById("status");
 const value = document.getElementById("value");
+const list = document.getElementById("list");
 connectbtn.addEventListener("click", connect);
 startBtn.addEventListener("click", start);
 endBtn.addEventListener("click", end);
@@ -65,6 +66,7 @@ async function powerQuery() {
 
   // Chuyển dữ liệu hexa sang mảng byte
   const byteArray = new Uint8Array(receivedData.buffer);
+  list.innerHTML = `${formattedDateTime}: Received data: ` + byteArray;
   if(byteArray.length == 13){
     value.innerHTML = `processing: ${byteArray[10]}`;
   }
