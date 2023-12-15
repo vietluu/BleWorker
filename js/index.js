@@ -24,6 +24,16 @@ if ("serviceWorker" in navigator) {
     .catch(function (error) {
       console.log("Service worker registration failed, error:", error);
     });
+    navigator.serviceWorker.ready.then((registration) => {
+      registration.sync.register('measurement-sync');
+    });
+    
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      if (event.data && event.data.action === 'start-measurement') {
+        // Gọi hàm start từ index khi nhận được tin nhắn từ Service Worker
+        start();
+      }
+    });
 }
 async function connection() {
   const data = new Uint8Array([0xcc, 0x80, 0x02, 0x03, 0x01, 0x01, 0x00, 0x01]);

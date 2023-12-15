@@ -1,0 +1,16 @@
+{
+    "name": "Bluetooth Control App",
+    "short_name": "BT Control",
+    "description": "Control Bluetooth devices",
+    "icons": [
+      {
+        "src": "/public/image/images.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      }
+    ],
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#4285F4"
+  }
