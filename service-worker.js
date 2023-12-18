@@ -37,5 +37,5 @@ function scheduleNextAction() {
 
     // Lặp lại việc gọi hàm này sau mỗi 10 phút
     scheduleNextAction();
-  },  10 * 60 * 1000); // 10 phút * 60 giây/phút * 1000 milliseconds/giây
+  },  60 * 1000); // 10 phút * 60 giây/phút * 1000 milliseconds/giây
 }
