@@ -19,7 +19,7 @@ powerBtn.addEventListener("click", powerQuery);
 let i = 0;
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
-    .register("./service-worker.js",{scope: '/BleWorker/'})
+    .register("./service-worker.js",{scope: '/'})
     .then(function (registration) {
       console.log("Registration successful, scope is:", registration.scope);
    

@@ -2,13 +2,11 @@
 
 // Khi Service Worker được khởi tạo
 self.addEventListener('install', function(event) {
-  event.waitUntil(self.skipWaiting()); // Activate worker immediately
 });
 
 self.addEventListener('activate', function(event) {
   console.log('Activated', event);
-  clients.claim();
-  event.waitUntil(self.clients.claim()); // Become available to all pages
+// Become available to all pages
 });
 
  // Khi nhận được tin nhắn từ trang web
