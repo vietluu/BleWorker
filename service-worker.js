@@ -7,6 +7,8 @@ self.addEventListener("install", function (event) {
 
 self.addEventListener("activate", function (event) {
   console.log("Activated", event);
+  event.waitUntil(registerPeriodicSync());
+
   
 });
 self.addEventListener("message", (event) => {
@@ -16,34 +18,17 @@ self.addEventListener("message", (event) => {
     event.waitUntil(scheduleNextAction());
   }
   if (event.data && event.data.action === "doing-action") {
-    console.log("run");
     event.waitUntil(
       self.registration.showNotification("Globi", {
-        body: "Uứng dụng đang đo...",
+        body: "ứng dụng đang đo...",
         data: {
-          url: "https://2gt04bc6-5502.asse.devtunnels.ms/",
+          url: "https://mmpkrf64-5502.asse.devtunnels.ms",
         },
       })
     );
   }
 });
 
-// async function start() {
-//  // status.innerHTML = "Đang tiền hành đo...";
- 
-//   try {
-//     const data = new Uint8Array([
-//       0xcc, 0x80, 0x02, 0x03, 0x01, 0x02, 0x00, 0x02,
-//     ]);
-//     await characteristic.writeValue(data);
-//   } catch (error) {
-//    // alert("Lỗi kết nối: " + error);
-//   //  window.location.reload();
-//     console.log(error);
-//   }
-// }
-
-// Đăng ký sự kiện sync
 self.addEventListener('sync', event => {
   if (event.tag === 'background-sync-task') {
     event.waitUntil(doBackgroundSync());
@@ -51,12 +36,9 @@ self.addEventListener('sync', event => {
 });
 
 function doBackgroundSync() {
-  // Thực hiện công việc cần thiết ở đây
   console.log('Doing background sync...');
-  // Ví dụ: gửi dữ liệu lên server
   fetch('/')
     .then(response => {
-      // Xử lý kết quả nếu cần
       console.log('Sync successful');
     })
     .catch(error => {
@@ -64,16 +46,11 @@ function doBackgroundSync() {
     });
 }
 
-// Đăng ký periodic sync (định kỳ)
-self.addEventListener('activate', event => {
-  event.waitUntil(registerPeriodicSync());
-});
-
 async function registerPeriodicSync() {
   if ('periodicSync' in self.registration) {
     try {
       await self.registration.periodicSync.register('background-sync-task', {
-        minInterval: 3 * 60 * 1000, // Định kỳ 24 giờ
+        minInterval: 60 * 60 * 1000,
       });
       console.log('Periodic sync registered');
     } catch (error) {
@@ -83,12 +60,8 @@ async function registerPeriodicSync() {
     console.error('Periodic background sync not supported');
   }
 }
-
-
 function scheduleNextAction() {
     console.log("Other function activated after 10 minutes");
-
-    // Gửi tin nhắn tới trang web để thông báo rằng đã qua 10 phút và có thể kích hoạt hàm khác tiếp theo
     self.clients
       .matchAll({
         includeUncontrolled: true,
@@ -98,9 +71,11 @@ function scheduleNextAction() {
         console.log(clients);
         clients.forEach((client) => {
           self.registration.showNotification("Globi", {
-            body: "Uứng dụng bắt đầu đo sau 3p...",
+
+            
+            body: "ứng dụng bắt đầu đo sau 10p...",
             data: {
-              url: "https://2gt04bc6-5502.asse.devtunnels.ms/",
+              url: "https://mmpkrf64-5502.asse.devtunnels.ms",
             },
           });
           client.postMessage({ action: "next-action-ready" });

@@ -36,12 +36,12 @@ window.addEventListener('load',async  function() {
             status.innerHTML = 'Running code in index.js'
 
             console.log('Running code in index.js every 10 minutes');
-            navigator.serviceWorker.ready.then(function(registration) {
-              // Gửi thông điệp tới service worker
-              registration.active.postMessage({action: 'doing-action'});
-            });
             setTimeout(() => {
-              start();
+              navigator.serviceWorker.ready.then(function(registration) {
+                // Gửi thông điệp tới service worker
+                registration.active.postMessage({action: 'doing-action'});
+              });
+             return start();
             }, 3 * 60 * 1000);
           }
         });
@@ -170,6 +170,7 @@ async function connect() {
     characteristic = await service.getCharacteristic(characteristicUUID);
     read = await service.getCharacteristic(readUUID);
     // Lắng nghe sự kiện nhận dữ liệu
+    
     read.addEventListener("characteristicvaluechanged", handleCharacteristicValueChanged);
 
     // Kích hoạt lắng nghe dữ liệu
