@@ -25,7 +25,7 @@ window.addEventListener('load',async  function() {
    //Notification.requestPermission()
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker
-      .register("/service-worker.js", { scope: "./" })
+      .register("/service-worker.js", { scope: "/BleWorker/" })
       .then(function (registration) {
         
         console.log("Registration successful, scope is:", registration.scope);
