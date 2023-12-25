@@ -25,7 +25,7 @@ window.addEventListener('load',async  function() {
    //Notification.requestPermission()
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker
-      .register("/service-worker.js", { scope: "./" })
+      .register("/service-worker.js", { scope: "./BleWorker/" })
       .then(function (registration) {
         
         console.log("Registration successful, scope is:", registration.scope);
@@ -36,13 +36,12 @@ window.addEventListener('load',async  function() {
             status.innerHTML = 'Running code in index.js'
 
             console.log('Running code in index.js every 10 minutes');
-            setTimeout(() => {
               navigator.serviceWorker.ready.then(function(registration) {
                 // Gửi thông điệp tới service worker
                 registration.active.postMessage({action: 'doing-action'});
               });
-             return start();
-            }, 3 * 60 * 1000);
+              start();
+            
           }
         });
   

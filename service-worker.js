@@ -1,5 +1,4 @@
 // service-worker.js
-
 // Khi Service Worker được khởi tạo
 self.addEventListener("install", function (event) {
   self.skipWaiting(); // Kích hoạt Service Worker ngay lập tức
@@ -8,26 +7,47 @@ self.addEventListener("install", function (event) {
 self.addEventListener("activate", function (event) {
   console.log("Activated", event);
   event.waitUntil(registerPeriodicSync());
-
-  
 });
+0
 self.addEventListener("message", (event) => {
   console.log("Received message from main thread", event.data);
   if (event.data && event.data.action === "schedule-next-action") {
     console.log("run");
-    event.waitUntil(scheduleNextAction());
+    event.waitUntil(
+      self.registration.showNotification("Globi", {
+        body: "Ứng dụng bắt đầu đo sau 10 phút...",
+        data: {
+          url: "https://2gt04bc6-5502.asse.devtunnels.ms/",
+        },
+      }).then(() => {
+        return new Promise((resolve) => {
+
+          self.setTimeout(() => {
+            self.registration.showNotification("Globi", {
+              body: "test",
+              data: {
+                url: "https://2gt04bc6-5502.asse.devtunnels.ms/",
+              },
+            });
+            resolve(scheduleNextAction());
+          }, 3 * 60 * 1000);
+        });
+      })
+    );
   }
+
   if (event.data && event.data.action === "doing-action") {
     event.waitUntil(
       self.registration.showNotification("Globi", {
-        body: "ứng dụng đang đo...",
+        body: "Ứng dụng đang đo...",
         data: {
-          url: "https://mmpkrf64-5502.asse.devtunnels.ms",
+          url: "https://2gt04bc6-5502.asse.devtunnels.ms/",
         },
       })
     );
   }
 });
+
 
 self.addEventListener('sync', event => {
   if (event.tag === 'background-sync-task') {
@@ -70,18 +90,12 @@ function scheduleNextAction() {
       .then((clients) => {
         console.log(clients);
         clients.forEach((client) => {
-          self.registration.showNotification("Globi", {
-
-            
-            body: "ứng dụng bắt đầu đo sau 10p...",
-            data: {
-              url: "https://mmpkrf64-5502.asse.devtunnels.ms",
-            },
-          });
           client.postMessage({ action: "next-action-ready" });
         });
       });
 }
+
+
 self.addEventListener("notificationclick", (event) => {
   event.notification.close(); // Đóng thông báo
   const urlToOpen = event.notification.data.url; // Lấy URL từ dữ liệu thông báo

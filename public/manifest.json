@@ -9,7 +9,11 @@
         "type": "image/png"
       }
     ],
-    "start_url": "/",
+    "background": {
+      "service_worker": "service-worker.js",
+      "type": "module"
+    },
+    "start_url": "/BleWorker/",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#4285F4"
