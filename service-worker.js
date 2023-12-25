@@ -17,7 +17,7 @@ self.addEventListener("message", (event) => {
       self.registration.showNotification("Globi", {
         body: "Ứng dụng bắt đầu đo sau 10 phút...",
         data: {
-          url: "https://2gt04bc6-5502.asse.devtunnels.ms/",
+          url: "https://vietluu.github.io/BleWorker/",
         },
       }).then(() => {
         return new Promise((resolve) => {
@@ -26,7 +26,7 @@ self.addEventListener("message", (event) => {
             self.registration.showNotification("Globi", {
               body: "test",
               data: {
-                url: "https://2gt04bc6-5502.asse.devtunnels.ms/",
+                url: "https://vietluu.github.io/BleWorker/",
               },
             });
             resolve(scheduleNextAction());
@@ -41,7 +41,7 @@ self.addEventListener("message", (event) => {
       self.registration.showNotification("Globi", {
         body: "Ứng dụng đang đo...",
         data: {
-          url: "https://2gt04bc6-5502.asse.devtunnels.ms/",
+          url: "https://vietluu.github.io/BleWorker/",
         },
       })
     );
