@@ -15,7 +15,7 @@ self.addEventListener("message", (event) => {
     console.log("run");
     event.waitUntil(
       self.registration.showNotification("Globi", {
-        body: "Ứng dụng bắt đầu đo sau 10 phút...",
+        body: "Ứng dụng bắt đầu đo sau 30 phút...",
         data: {
           url: "https://vietluu.github.io/BleWorker/",
         },
@@ -24,13 +24,13 @@ self.addEventListener("message", (event) => {
 
           self.setTimeout(() => {
             self.registration.showNotification("Globi", {
-              body: "test",
+              body: "Bắt đầu đo",
               data: {
                 url: "https://vietluu.github.io/BleWorker/",
               },
             });
             resolve(scheduleNextAction());
-          }, 3 * 60 * 1000);
+          }, 30 * 60 * 1000);
         });
       })
     );
