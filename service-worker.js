@@ -19,20 +19,8 @@ self.addEventListener("message", (event) => {
         data: {
           url: "https://vietluu.github.io/BleWorker/",
         },
-      }).then(() => {
-        return new Promise((resolve) => {
-
-          self.setTimeout(() => {
-            self.registration.showNotification("Globi", {
-              body: "Bắt đầu đo",
-              data: {
-                url: "https://vietluu.github.io/BleWorker/",
-              },
-            });
-            resolve(scheduleNextAction());
-          }, 10 * 60 * 1000);
-        });
       })
+      ,scheduleNextAction()
     );
   }
 

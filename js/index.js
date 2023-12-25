@@ -36,11 +36,13 @@ window.addEventListener('load',async  function() {
             status.innerHTML = 'Running code in index.js'
 
             console.log('Running code in index.js every 10 minutes');
+            setTimeout(() => {
               navigator.serviceWorker.ready.then(function(registration) {
                 // Gửi thông điệp tới service worker
                 registration.active.postMessage({action: 'doing-action'});
               });
               start();
+            },10 * 60 * 1000)
             
           }
         });
